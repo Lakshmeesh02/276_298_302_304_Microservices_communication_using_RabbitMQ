@@ -22,7 +22,7 @@ services:
       - RABBITMQ_HOST=rabbitmq
 
   consumer_3:
-    build: ./consumer_2
+    build: ./consumer_3
     depends_on:
       - rabbitmq
     environment:
