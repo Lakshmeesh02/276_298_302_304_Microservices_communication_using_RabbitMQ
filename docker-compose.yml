@@ -33,3 +33,18 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  
+  database_service:
+    image: mysql:latest
+    environment:
+      MYSQL_ROOT_PASSWORD: coleadonis23#J
+      MYSQL_DATABASE: IMS
+      MYSQL_USER: root
+      MYSQL_PASSWORD: coleadonis23#J
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+volumes:
+  db_data:
