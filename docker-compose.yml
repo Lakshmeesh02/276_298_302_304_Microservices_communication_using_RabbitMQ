@@ -6,6 +6,8 @@ services:
       - rabbitmq
     environment:
       - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "5000:5000"
   
   consumer_1:
     build: ./consumer_1
@@ -13,6 +15,8 @@ services:
       - rabbitmq
     environment:
       - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "5001:5000"
   
   consumer_2:
     build: ./consumer_2
@@ -20,6 +24,8 @@ services:
       - rabbitmq
     environment:
       - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "5002:5000"
 
   consumer_3:
     build: ./consumer_3
@@ -27,6 +33,8 @@ services:
       - rabbitmq
     environment:
       - RABBITMQ_HOST=rabbitmq
+    ports:
+      - "5003:5000"
 
   rabbitmq:
     image: rabbitmq:3-management
@@ -39,8 +47,6 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: coleadonis23#J
       MYSQL_DATABASE: IMS
-      MYSQL_USER: root
-      MYSQL_PASSWORD: coleadonis23#J
     volumes:
       - db_data:/var/lib/mysql
     ports:
