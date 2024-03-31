@@ -46,11 +46,12 @@ services:
     image: mysql:latest
     environment:
       MYSQL_ROOT_PASSWORD: coleadonis23#J
-      MYSQL_DATABASE: IMS
+      MYSQL_DATABASE: ims
     volumes:
       - db_data:/var/lib/mysql
+      - ./database_service/:/docker-entrypoint-initdb.d/
     ports:
-      - "3307:3306"
+      - "3308:3306"
 
 volumes:
   db_data:
