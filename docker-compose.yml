@@ -36,6 +36,15 @@ services:
     ports:
       - "5003:5000"
 
+  consumer_4:
+    build: ./consumer_4
+    depends_on:
+      - rabbitmq
+    environment:
+      - RABBITMQ_HOST=rabbitmq
+    ports:
+      -5004:5000
+      
   rabbitmq:
     image: rabbitmq:3-management
     ports:
