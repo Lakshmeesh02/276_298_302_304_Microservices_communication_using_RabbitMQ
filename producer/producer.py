@@ -1,43 +1,53 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
+import pika
+import time
 
 app=Flask(__name__)
 
-inventory=[]
+def connect_to_rabbitmq():
+    connection=None
+    while connection is None:
+        try: 
+            connection=pika.BlockingConnection(pika.ConnectionParameters('rabbitmq'))
+            channel=connection.channel()
+            channel.queue_declare(queue='health_check')
+            channel.queue_declare(queue='item_creation_queue')
+            channel.queue_declare(queue='order_processing_queue')
+            channel.queue_declare(queue='stock_management_queue')
+            print("Connected to rabbitmq")
+        except pika.exceptions.AMQPConnectionError:
+            print("Failed to connect, retrying in 5 sec")
+            time.sleep(5)
+    return connection, channel
 
-@app.route('/')
+connection, channel=connect_to_rabbitmq()
+
+@app.route('/') 
 def home():
-    return "Hello world"
+    return "Welcome to our inventory!"
 
-@app.route('/health', methods=['GET'])
+@app.route('/health_check', methods=['GET'])
 def health_check():
-    return 'OK', 200
+    channel.basic_publish(exchange='', routing_key='health_check_queue',  body='Health check request')
+    return 'Health check request sent'
 
-@app.route('/inventory', methods=['POST'])
+@app.route('/items', methods=['POST'])
 def create_item():
     data=request.get_json()
-    inventory.append(data)
-    return jsonify({'message: Item created successfully'}), 201
+    channel.basic_publish(exchange='', routing_key='item_creation_queue', body=str(data))
+    return 'Item creation request sent'
 
-@app.route('/inventory', methods=['GET'])
-def get_items():
-    return jsonify(inventory)
-
-@app.route('/inventory/<int:item_id>', methods=['PUT'])
-def update_item(item_id):
+@app.route('/stock', methods=['PUT'])
+def stock_update():
     data=request.get_json()
-    if item_id<len(inventory):
-        inventory[item_id]=data
-        return jsonify({'message: Item updated successfully'})
-    else:
-        return jsonify({'error: Item not found'}), 404
-    
-@app.route('/inventory/<int:item_id>', methods=['DELETE'])
-def delete_item(item_id):
-    if item_id<len(inventory):
-        inventory.pop(item_id)
-        return jsonify({'message: Item deleted successfully'})
-    else:
-        return jsonify({'error: Item not found'}), 404
+    channel.basic_publish(exchange='', routing_key='stock_management_queue', body=str(data))
+    return 'Stock update request sent'
+
+@app.route('/orders', methods=['POST'])
+def order_process():
+    data=request.get_json()
+    channel.basic_publish(exchange='', routing_key='order_processing_queue', body=str(data))
+    return 'Order request sent'
     
 if __name__=='__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)
