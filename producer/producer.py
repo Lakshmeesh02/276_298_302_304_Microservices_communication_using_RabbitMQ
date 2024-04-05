@@ -35,8 +35,9 @@ def health_check():
 def create_item():
     data={
         'name': request.form["name"], 
-        'description:': request.form["description"], 
-        'price': float(request.form["price"])
+        'description': request.form["description"], 
+        'price': float(request.form["price"]), 
+        'quantity': int(request.form["quantity"])
     }
     channel.basic_publish(exchange='', routing_key='item_creation_queue', body=str(data))
     return 'Item creation request sent'
@@ -52,12 +53,9 @@ def stock_update():
 
 @app.route('/orders', methods=['POST'])
 def order_process():
-    items = {
-        'item_id': int(request.form["item[0][item_id]"]), 
-        'quantity': int(request.form["item[0][quantity]"])
-    }
     data = {
-        'items': items,
+        'item_id': int(request.form["item_id"]),
+        'quantity': int(request.form["quantity"]), 
         'customer_name': request.form["customer_name"], 
         'shipping_address': request.form["shipping_address"]
     }
