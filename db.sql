@@ -1,3 +1,4 @@
+create database ims;
 use ims;
 CREATE TABLE items (
     id SERIAL PRIMARY KEY,
@@ -11,9 +12,8 @@ CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
     item_id INTEGER REFERENCES items(id),
     quantity INTEGER NOT NULL,
-    status VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP NOT NULL,
-    updated_at TIMESTAMP
+    customer_name VARCHAR(20) NOT NULL,
+    shipping_address VARCHAR(100) NOT NULL
 );
 
 CREATE TABLE health_checks (
