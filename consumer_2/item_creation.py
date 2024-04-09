@@ -1,7 +1,7 @@
 import pika
 import pymysql
 import time
-
+ 
 db=pymysql.connect(
 	host='host.docker.internal',
 	user='root', 
