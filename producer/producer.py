@@ -72,7 +72,7 @@ def stock_update():
         'quantity': int(request.form["quantity"])
     }
     channel.basic_publish(exchange='', routing_key='stock_management_queue', body=str(data))
-    return "stock update requested"
+    return redirect(url_for('getitems'))
 
 @app.route('/orders', methods=['POST'])
 def order_process():
