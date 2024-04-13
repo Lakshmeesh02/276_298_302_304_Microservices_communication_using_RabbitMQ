@@ -4,7 +4,7 @@
     <title>Producer Test</title>
     <style>
         body {
-            background-image: url('ims.png');
+            background-image: url(' {{url_for("static", filename="ims.png") }} ');
             background-size: cover;
             background-position: center;
             font-family: Arial, sans-serif;
@@ -52,7 +52,7 @@
     <form action="/health_check" method="GET">
         <button type="submit">Send Health Check Request</button>
     </form>
-
+    
     <form action="/items" method="POST">
         <label for="item-name">Item Name:</label>
         <input type="text" id="item-name" name="name" required>
